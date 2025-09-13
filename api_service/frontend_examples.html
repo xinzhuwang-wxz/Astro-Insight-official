@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Astro-Insight API 前端对接示例</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+        
+        .section h2 {
+            color: #34495e;
+            margin-top: 0;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        button:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        
+        .info {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            color: #666;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        
+        .status-online {
+            background-color: #27ae60;
+        }
+        
+        .status-offline {
+            background-color: #e74c3c;
+        }
+        
+        .code-block {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+        }
+        
+        .response-format {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+        
+        .response-format h4 {
+            margin-top: 0;
+            color: #495057;
+            border-bottom: 1px solid #dee2e6;
+            padding-bottom: 5px;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+        
+        .tab.active {
+            border-bottom-color: #3498db;
+            color: #3498db;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌌 Astro-Insight API 前端对接示例</h1>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('demo')">在线演示</div>
+            <div class="tab" onclick="showTab('code')">代码示例</div>
+            <div class="tab" onclick="showTab('docs')">API文档</div>
+        </div>
+        
+        <!-- 在线演示标签页 -->
+        <div id="demo" class="tab-content active">
+            <div class="section">
+                <h2>🔍 系统状态</h2>
+                <button onclick="checkStatus()">检查系统状态</button>
+                <div id="statusResult" class="result" style="display: none;"></div>
+            </div>
+            
+            <div class="section">
+                <h2>💬 天文查询</h2>
+                <div class="form-group">
+                    <label for="queryInput">查询内容:</label>
+                    <textarea id="queryInput" placeholder="请输入您的天文问题，例如：什么是黑洞？"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="userType">用户类型:</label>
+                    <select id="userType">
+                        <option value="">自动识别</option>
+                        <option value="amateur">业余爱好者</option>
+                        <option value="professional">专业研究人员</option>
+                    </select>
+                </div>
+                
+                <button onclick="submitQuery()">提交查询</button>
+                <button onclick="clearResults()">清空结果</button>
+                
+                <div class="loading" id="loading">
+                    <p>🔄 正在处理查询，请稍候...</p>
+                </div>
+                
+                <div id="queryResult" class="result" style="display: none;"></div>
+                
+                <div id="responseFormat" class="response-format" style="display: none;">
+                    <h4>📋 完整API响应格式</h4>
+                    <div id="responseJson"></div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>🧪 批量测试</h2>
+                <button onclick="runBatchTest()">运行批量测试</button>
+                <div id="batchResult" class="result" style="display: none;"></div>
+            </div>
+        </div>
+        
+        <!-- 代码示例标签页 -->
+        <div id="code" class="tab-content">
+            <div class="section">
+                <h2>📝 JavaScript 示例</h2>
+                <div class="code-block">
+// 基础查询函数
+async function queryAstro(query, userType = null) {
+    try {
+        const response = await fetch('http://localhost:8000/query', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                query: query,
+                user_type: userType
+            })
+        });
+        
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('查询失败:', error);
+        throw error;
+    }
+}
+
+// 使用示例
+queryAstro('什么是黑洞？', 'amateur')
+    .then(result => {
+        console.log('查询结果:', result);
+        if (result.success) {
+            console.log('回答:', result.data.answer);
+            console.log('执行时间:', result.execution_time + '秒');
+        }
+    })
+    .catch(error => {
+        console.error('错误:', error);
+    });
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>🐍 Python 示例</h2>
+                <div class="code-block">
+import requests
+import json
+
+def query_astro(query, user_type=None):
+    """查询天文问题"""
+    url = "http://localhost:8000/query"
+    payload = {
+        "query": query,
+        "user_type": user_type
+    }
+    
+    try:
+        response = requests.post(url, json=payload)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"请求失败: {e}")
+        return None
+
+# 使用示例
+result = query_astro("什么是黑洞？", "amateur")
+if result and result['success']:
+    print(f"回答: {result['data']['answer']}")
+    print(f"执行时间: {result['execution_time']:.2f}秒")
+else:
+    print("查询失败")
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>📱 React 组件示例</h2>
+                <div class="code-block">
+import React, { useState } from 'react';
+
+function AstroQuery() {
+    const [query, setQuery] = useState('');
+    const [userType, setUserType] = useState('');
+    const [result, setResult] = useState(null);
+    const [loading, setLoading] = useState(false);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        
+        try {
+            const response = await fetch('http://localhost:8000/query', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query, user_type: userType })
+            });
+            
+            const data = await response.json();
+            setResult(data);
+        } catch (error) {
+            console.error('查询失败:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        &lt;div&gt;
+            &lt;form onSubmit={handleSubmit}&gt;
+                &lt;textarea 
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="请输入天文问题"
+                /&gt;
+                &lt;select 
+                    value={userType}
+                    onChange={(e) => setUserType(e.target.value)}
+                &gt;
+                    &lt;option value=""&gt;自动识别&lt;/option&gt;
+                    &lt;option value="amateur"&gt;业余爱好者&lt;/option&gt;
+                    &lt;option value="professional"&gt;专业研究人员&lt;/option&gt;
+                &lt;/select&gt;
+                &lt;button type="submit" disabled={loading}&gt;
+                    {loading ? '查询中...' : '提交查询'}
+                &lt;/button&gt;
+            &lt;/form&gt;
+            
+            {result && (
+                &lt;div&gt;
+                    &lt;h3&gt;查询结果&lt;/h3&gt;
+                    &lt;p&gt;{result.data.answer}&lt;/p&gt;
+                    &lt;p&gt;执行时间: {result.execution_time}秒&lt;/p&gt;
+                &lt;/div&gt;
+            )}
+        &lt;/div&gt;
+    );
+}
+                </div>
+            </div>
+        </div>
+        
+        <!-- API文档标签页 -->
+        <div id="docs" class="tab-content">
+            <div class="section">
+                <h2>📚 API 端点</h2>
+                <h3>GET /status</h3>
+                <p>获取系统状态</p>
+                <div class="code-block">
+curl http://localhost:8000/status
+                </div>
+                
+                <h3>POST /query</h3>
+                <p>提交天文查询</p>
+                <div class="code-block">
+curl -X POST http://localhost:8000/query \
+  -H "Content-Type: application/json" \
+  -d '{"query": "什么是黑洞？", "user_type": "amateur"}'
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>📋 响应格式</h2>
+                <h3>成功响应</h3>
+                <div class="code-block">
+{
+  "success": true,
+  "message": "查询处理成功",
+  "data": {
+    "query": "什么是黑洞？",
+    "session_id": "api_20240101_120000_123456",
+    "user_type": "amateur",
+    "task_type": "qa",
+    "current_step": "qa_completed",
+    "is_complete": true,
+    "answer": "黑洞是宇宙中一种极其致密的天体...",
+    "generated_code": null,
+    "execution_history": [...],
+    "error_info": null
+  },
+  "timestamp": "2024-01-01T12:00:00.000Z",
+  "execution_time": 2.34
+}
+                </div>
+                
+                <h3>错误响应</h3>
+                <div class="code-block">
+{
+  "success": false,
+  "message": "查询处理失败: 具体错误信息",
+  "data": {
+    "query": "用户查询",
+    "session_id": "api_20240101_120000_123456",
+    "error": "具体错误信息"
+  },
+  "timestamp": "2024-01-01T12:00:00.000Z",
+  "execution_time": 0.12
+}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8000';
+        
+        // 标签页切换
+        function showTab(tabName) {
+            // 隐藏所有标签页内容
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // 移除所有标签的激活状态
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // 显示选中的标签页
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        // 检查系统状态
+        async function checkStatus() {
+            const resultDiv = document.getElementById('statusResult');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result info';
+            resultDiv.textContent = '正在检查系统状态...';
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/status`);
+                const data = await response.json();
+                
+                if (data.status === 'healthy') {
+                    resultDiv.className = 'result success';
+                    resultDiv.innerHTML = `✅ 系统状态: ${data.status}<br>📝 消息: ${data.message}<br>⏰ 时间: ${data.timestamp}`;
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.innerHTML = `❌ 系统状态: ${data.status}<br>📝 消息: ${data.message}`;
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ 连接失败: ${error.message}`;
+            }
+        }
+        
+        // 提交查询
+        async function submitQuery() {
+            const query = document.getElementById('queryInput').value.trim();
+            const userType = document.getElementById('userType').value;
+            const loadingDiv = document.getElementById('loading');
+            const resultDiv = document.getElementById('queryResult');
+            
+            if (!query) {
+                alert('请输入查询内容');
+                return;
+            }
+            
+            // 显示加载状态
+            loadingDiv.style.display = 'block';
+            resultDiv.style.display = 'none';
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/query`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        query: query,
+                        user_type: userType || null
+                    })
+                });
+                
+                const data = await response.json();
+                
+                // 隐藏加载状态
+                loadingDiv.style.display = 'none';
+                resultDiv.style.display = 'block';
+                
+                if (data.success) {
+                    resultDiv.className = 'result success';
+                    resultDiv.innerHTML = `
+                        <strong>✅ 查询成功</strong><br>
+                        <strong>查询内容:</strong> ${data.data.query}<br>
+                        <strong>用户类型:</strong> ${data.data.user_type || '自动识别'}<br>
+                        <strong>任务类型:</strong> ${data.data.task_type || 'N/A'}<br>
+                        <strong>是否完成:</strong> ${data.data.is_complete ? '是' : '否'}<br>
+                        <strong>执行时间:</strong> ${data.execution_time.toFixed(2)}秒<br>
+                        <strong>回答:</strong><br>
+                        ${data.data.answer}
+                    `;
+                    
+                    // 显示完整的API响应格式
+                    showResponseFormat(data);
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.innerHTML = `
+                        <strong>❌ 查询失败</strong><br>
+                        <strong>错误信息:</strong> ${data.message}<br>
+                        <strong>详细信息:</strong> ${JSON.stringify(data.data, null, 2)}
+                    `;
+                    
+                    // 显示错误响应格式
+                    showResponseFormat(data);
+                }
+            } catch (error) {
+                loadingDiv.style.display = 'none';
+                resultDiv.style.display = 'block';
+                resultDiv.className = 'result error';
+                resultDiv.textContent = `❌ 请求失败: ${error.message}`;
+            }
+        }
+        
+        // 清空结果
+        function clearResults() {
+            document.getElementById('queryResult').style.display = 'none';
+            document.getElementById('responseFormat').style.display = 'none';
+            document.getElementById('queryInput').value = '';
+            document.getElementById('userType').value = '';
+        }
+        
+        // 显示API响应格式
+        function showResponseFormat(data) {
+            const responseFormatDiv = document.getElementById('responseFormat');
+            const responseJsonDiv = document.getElementById('responseJson');
+            
+            // 格式化JSON响应
+            const formattedJson = JSON.stringify(data, null, 2);
+            
+            // 高亮显示JSON（简单的语法高亮）
+            const highlightedJson = formattedJson
+                .replace(/(".*?")\s*:/g, '<span style="color: #0066cc; font-weight: bold;">$1</span>:')
+                .replace(/:\s*(".*?")/g, ': <span style="color: #008800;">$1</span>')
+                .replace(/:\s*(true|false|null)/g, ': <span style="color: #cc6600;">$1</span>')
+                .replace(/:\s*(\d+\.?\d*)/g, ': <span style="color: #cc6600;">$1</span>')
+                .replace(/(\n\s*)([{}])/g, '$1<span style="color: #666666;">$2</span>');
+            
+            responseJsonDiv.innerHTML = highlightedJson;
+            responseFormatDiv.style.display = 'block';
+        }
+        
+        // 批量测试
+        async function runBatchTest() {
+            const resultDiv = document.getElementById('batchResult');
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'result info';
+            resultDiv.textContent = '正在运行批量测试...';
+            
+            const testCases = [
+                { query: "我是专业人士，我想了解大麦伦星云信息", userType: "professional" },
+                { query: "我是专业人士，我想了解", userType: "professional" },
+                { query: "绘制天体位置图", userType: "professional" }
+            ];
+            
+            let successCount = 0;
+            let totalTime = 0;
+            let results = [];
+            
+            for (let i = 0; i < testCases.length; i++) {
+                const testCase = testCases[i];
+                try {
+                    const response = await fetch(`${API_BASE_URL}/query`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            query: testCase.query,
+                            user_type: testCase.userType
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        successCount++;
+                        totalTime += data.execution_time;
+                        results.push(`✅ 测试 ${i + 1}: ${testCase.query} (${data.execution_time.toFixed(2)}s)`);
+                    } else {
+                        results.push(`❌ 测试 ${i + 1}: ${testCase.query} - ${data.message}`);
+                    }
+                } catch (error) {
+                    results.push(`❌ 测试 ${i + 1}: ${testCase.query} - ${error.message}`);
+                }
+            }
+            
+            const avgTime = successCount > 0 ? (totalTime / successCount).toFixed(2) : 0;
+            
+            resultDiv.className = successCount === testCases.length ? 'result success' : 'result error';
+            resultDiv.innerHTML = `
+                <strong>📊 批量测试结果</strong><br>
+                <strong>成功率:</strong> ${successCount}/${testCases.length} (${(successCount/testCases.length*100).toFixed(1)}%)<br>
+                <strong>平均执行时间:</strong> ${avgTime}秒<br><br>
+                <strong>详细结果:</strong><br>
+                ${results.join('<br>')}<br><br>
+                <em>💡 提示：批量测试不显示详细响应格式，请使用单次查询查看完整API响应格式</em>
+            `;
+        }
+        
+        // 页面加载时检查状态
+        window.onload = function() {
+            checkStatus();
+        };
+    </script>
+</body>
+</html>
