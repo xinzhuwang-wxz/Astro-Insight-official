@@ -32,7 +32,7 @@ BASIC_MODEL:
 CODE_MODEL:
   base_url: https://ark.cn-beijing.volces.com/api/v3
   model: "doubao-1-5-pro-32k-250115"  # 可以使用相同模型，或者专门的代码模型如 "codellama" 
-  api_key: "7cb5b91d-ec51-40e0-b75c-1bba04931000"
+  api_key: "xxx"
   max_retries: 3
   verify_ssl: true
 
@@ -40,7 +40,7 @@ CODE_MODEL:
 Explain_MODEL:
   base_url: https://ark.cn-beijing.volces.com/api/v3
   model: "doubao-seed-1-6-vision-250815"
-  api_key: "7cb5b91d-ec51-40e0-b75c-1bba04931000"
+  api_key: "xxx"
   max_retries: 3
   verify_ssl: true
 
