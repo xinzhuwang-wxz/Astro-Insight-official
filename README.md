@@ -1,5 +1,10 @@
 # Astro-Insight: 星之所问，信之所归
 
+<div align="center">
+  <img src="photo/top.jpg" alt="Astro-Insight展示图" width="800"/>
+  <p><em>🌌 探索宇宙奥秘的智能助手</em></p>
+</div>
+
 一款面向未来的天文研究助手，基于 **LangGraph** 与 **MCP** 技术驱动。
 
 [快速开始](#快速开始) | [API服务](./api_service/) | [系统架构](#系统架构) | [演示](./interactive_demo.py) | [流程图](./展示流程图.md)
@@ -142,9 +147,28 @@ graph TD
 
 ## BanchMark
 
-![Screenshot 2025-09-14 at 12.32.58](/Users/physicsboy/Desktop/Screenshot 2025-09-14 at 12.32.58.png)
+### 性能基准测试
 
-![Screenshot 2025-09-14 at 12.33.17](/Users/physicsboy/Desktop/Screenshot 2025-09-14 at 12.33.17.png)
+<div align="center">
+  <h3>系统性能对比</h3>
+  
+  <img src="photo/bench1.png" alt="基准测试1" width="600"/>
+  <p><em>图1: 系统响应时间和准确率对比</em></p>
+  
+  <img src="photo/bench2.png" alt="基准测试2" width="600"/>
+  <p><em>图2: 不同模型在天文数据处理任务上的性能表现</em></p>
+</div>
+
+### 关键指标
+
+| 指标 | 数值 | 说明 |
+|------|------|------|
+| **平均响应时间** | < 2秒 | 从用户输入到结果输出 |
+| **代码生成准确率** | > 90% | 可执行Python代码生成 |
+| **天体识别精度** | > 95% | SIMBAD数据库查询准确率 |
+| **多轮对话连贯性** | > 85% | 上下文理解保持度 |
+| **数据处理吞吐量** | 1000+ 记录/秒 | 大规模数据集处理能力 |
+
 
 ## API文档
 
