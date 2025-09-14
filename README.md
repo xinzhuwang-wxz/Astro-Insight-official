@@ -1,14 +1,13 @@
 # Astro-Insight: 星之所问，信之所归
 
 <div align="center">
-  <img src="photo/top.jpg" alt="Astro-Insight展示图" width="800"/>
-  <p><em></em></p>
+  <img src="photo/top3.png" alt="Astro-Insight展示图" width="800"/>
   
-  <img src="photo/top3.png" alt="Astro-Insight功能展示" width="800"/>
-  <p><em>探索宇宙奥秘的智能助手</em></p>
+  <img src="photo/top4.png" alt="Astro-Insight功能展示" width="800"/>
   
-  <img src="photo/top4.png" alt="Astro-Insight技术架构" width="800"/>
-  <p><em>⚡ 基于LangGraph和MCP的智能系统</em></p>
+  <img src="photo/top5.jpg" alt="Astro-Insight技术架构" width="800"/>
+  
+  <img src="photo/top6.png" alt="Astro-Insight系统展示" width="800"/>
 </div>
 
 一款面向未来的天文研究助手，基于 **LangGraph** 与 **MCP** 技术驱动。
