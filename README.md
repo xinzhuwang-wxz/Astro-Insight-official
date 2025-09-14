@@ -2,7 +2,7 @@
 
 <div align="center">
   <img src="photo/top.jpg" alt="Astro-Insight展示图" width="800"/>
-  <p><em>探索宇宙奥秘的智能助手</em></p>
+  <p><em></em></p>
   
   <img src="photo/top3.png" alt="Astro-Insight功能展示" width="800"/>
   <p><em>探索宇宙奥秘的智能助手</em></p>
