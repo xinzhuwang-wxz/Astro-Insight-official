@@ -138,6 +138,14 @@ graph TD
 | **工具集成** | MCP ML, MCP Retrieval, Python执行器 |
 | **部署** | Docker, 云就绪 |
 
+
+
+## BanchMark
+
+![Screenshot 2025-09-14 at 12.32.58](/Users/physicsboy/Desktop/Screenshot 2025-09-14 at 12.32.58.png)
+
+![Screenshot 2025-09-14 at 12.33.17](/Users/physicsboy/Desktop/Screenshot 2025-09-14 at 12.33.17.png)
+
 ## API文档
 
 ### RESTful API端点

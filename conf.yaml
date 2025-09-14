@@ -47,7 +47,7 @@ Explain_MODEL:
 # 搜索API配置
 SEARCH_API:
   provider: tavily
-  api_key: ""  # 请通过环境变量 TAVILY_API_KEY 设置
+  api_key: ""  
   base_url: https://api.tavily.com
   max_results: 5
   include_domains: ["arxiv.org", "nasa.gov", "esa.int", "aas.org"]

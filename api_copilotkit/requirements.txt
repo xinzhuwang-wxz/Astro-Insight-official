@@ -1,0 +1,5 @@
+# # Astro-Insight CopilotKit API 依赖包
+
+# # CopilotKit核心依赖
+# copilotkit>=0.1.41
+
