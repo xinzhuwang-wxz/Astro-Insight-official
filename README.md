@@ -1,18 +1,22 @@
 # Astro-Insight: 星之所问，信之所归
 
 <div align="center">
-  <img src="photo/top3.png" alt="Astro-Insight展示图" width="800"/>
+  <img src="photo/top3.png" alt="" width="800" style="display: block; margin: 0 auto;"/>
   
-  <img src="photo/top4.png" alt="Astro-Insight功能展示" width="800"/>
+  <img src="photo/top4.png" alt="" width="800" style="display: block; margin: 0 auto;"/>
   
-  <img src="photo/top5.jpg" alt="Astro-Insight技术架构" width="800"/>
+  <img src="photo/top5.jpg" alt="" width="800" style="display: block; margin: 0 auto;"/>
   
-  <img src="photo/top6.png" alt="Astro-Insight系统展示" width="800"/>
+  <img src="photo/top6.png" alt="" width="800" style="display: block; margin: 0 auto;"/>
 </div>
+
+<div align="center">
 
 一款面向未来的天文研究助手，基于 **LangGraph** 与 **MCP** 技术驱动。
 
 [快速开始](#快速开始) | [API服务](./api_service/) | [系统架构](#系统架构) | [演示](./interactive_demo.py) | [流程图](./展示流程图.md)
+
+</div>
 
 ## 项目介绍
 
