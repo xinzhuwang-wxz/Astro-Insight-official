@@ -18,7 +18,7 @@
 #BASIC_MODEL:
 #  base_url: https://ark.cn-beijing.volces.com/api/v3
 #  model: "doubao-1-5-pro-32k-250115"
-#  api_key: "your_doubao_api_key_here"  # 请在.env文件中设置
+#  api_key: "your_doubao_api_key_here"  # 
 #  max_retries: 3
 #  verify_ssl: true  # 云服务通常需要SSL验证
 BASIC_MODEL:
