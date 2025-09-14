@@ -1,0 +1,45 @@
+# [!NOTE]
+# Read the `docs/configuration_guide.md` carefully, and update the
+# configurations to match your specific settings and requirements.
+# - Replace `api_key` with your own credentials.
+# - Replace `base_url` and `model` name if you want to use a custom model.
+# - Set `verify_ssl` to `false` if your LLM server uses self-signed certificates
+# - A restart is required every time you change the `config.yaml` file.
+
+BASIC_MODEL:
+  base_url: http://localhost:11434/v1
+  model: "qwen2.5:7b"
+  api_key: "ollama"  # Ollama不需要真实API key，但需要提供值
+  max_retries: 3
+  verify_ssl: false  # 本地Ollama通常使用HTTP
+
+#BASIC_MODEL:
+  #base_url: https://ark.cn-beijing.volces.com/api/v3
+  #model: "doubao-1-5-pro-32k-250115"
+  #api_key: "7cb5b91d-ec51-40e0-b75c-1bba04931000"  # 豆包API密钥
+  #max_retries: 3
+  #verify_ssl: true  # 云服务通常需要SSL验证
+
+# 代码生成专用模型配置
+CODE_MODEL:
+  base_url: http://localhost:11434/v1
+  model: "qwen2.5:7b"
+  api_key: "ollama"  # Ollama不需要真实API key，但需要提供值
+  max_retries: 3
+  verify_ssl: false  
+
+Explain_MODEL:
+  base_url: http://localhost:11434/v1
+  model: "qwen2.5:7b"
+  api_key: "ollama"  # Ollama不需要真实API key，但需要提供值
+  max_retries: 3
+  verify_ssl: false  
+
+# 搜索API配置
+SEARCH_API:
+  provider: tavily
+  api_key: ""  # 请通过环境变量 TAVILY_API_KEY 设置
+  base_url: https://api.tavily.com
+  max_results: 5
+  include_domains: ["arxiv.org", "nasa.gov", "esa.int", "aas.org"]
+ 

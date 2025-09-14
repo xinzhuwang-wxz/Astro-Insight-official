@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天体分析系统 - Astro Insight</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .loading {
+            display: none;
+        }
+        .loading.active {
+            display: block;
+        }
+        .result-container {
+            display: none;
+        }
+        .result-container.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- 导航栏 -->
+    <nav class="gradient-bg shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <i class="fas fa-telescope text-white text-2xl mr-3"></i>
+                    <h1 class="text-white text-xl font-bold">天体分析系统</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="showSection('analysis')" class="text-white hover:text-gray-200 px-3 py-2 rounded-md text-sm font-medium">
+                        <i class="fas fa-search mr-1"></i>分析
+                    </button>
+                    <button onclick="showSection('data')" class="text-white hover:text-gray-200 px-3 py-2 rounded-md text-sm font-medium">
+                        <i class="fas fa-database mr-1"></i>数据
+                    </button>
+                    <button onclick="showSection('statistics')" class="text-white hover:text-gray-200 px-3 py-2 rounded-md text-sm font-medium">
+                        <i class="fas fa-chart-bar mr-1"></i>统计
+                    </button>
+                    <button onclick="checkSystemStatus()" class="text-white hover:text-gray-200 px-3 py-2 rounded-md text-sm font-medium">
+                        <i class="fas fa-heartbeat mr-1"></i>状态
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容区域 -->
+    <main class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <!-- 分析界面 -->
+        <div id="analysis-section" class="section">
+            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">
+                    <i class="fas fa-telescope text-blue-600 mr-2"></i>
+                    天体分析
+                </h2>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- 输入区域 -->
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">分析查询</label>
+                            <textarea id="analysisQuery" 
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" 
+                                    rows="4" 
+                                    placeholder="请输入您想要分析的天体信息，例如：'分析仙女座星系的结构特征'或'对比恒星光谱类型'..."></textarea>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">用户类型</label>
+                                <select id="userType" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="hobbyist">天文爱好者</option>
+                                    <option value="student">学生</option>
+                                    <option value="researcher">研究人员</option>
+                                    <option value="professional">专业天文学家</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">分析类型</label>
+                                <select id="analysisType" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <option value="classification">天体分类</option>
+                                    <option value="photometry">测光分析</option>
+                                    <option value="spectroscopy">光谱分析</option>
+                                    <option value="variability">变星分析</option>
+                                    <option value="structure">结构分析</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <button onclick="startAnalysis()" 
+                                class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
+                            <i class="fas fa-play mr-2"></i>
+                            开始分析
+                        </button>
+                    </div>
+                    
+                    <!-- 结果预览区域 -->
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">分析结果</h3>
+                        
+                        <!-- 加载状态 -->
+                        <div id="analysisLoading" class="loading text-center py-8">
+                            <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                            <p class="mt-2 text-gray-600">正在分析中...</p>
+                        </div>
+                        
+                        <!-- 结果显示 -->
+                        <div id="analysisResult" class="result-container space-y-4">
+                            <div class="bg-white rounded-lg p-4 border">
+                                <h4 class="font-semibold text-gray-900 mb-2">天体信息</h4>
+                                <div id="celestialInfo" class="text-sm text-gray-600"></div>
+                            </div>
+                            
+                            <div class="bg-white rounded-lg p-4 border">
+                                <h4 class="font-semibold text-gray-900 mb-2">分类结果</h4>
+                                <div id="classificationResult" class="text-sm text-gray-600"></div>
+                            </div>
+                            
+                            <div class="bg-white rounded-lg p-4 border">
+                                <h4 class="font-semibold text-gray-900 mb-2">生成代码</h4>
+                                <pre id="generatedCode" class="text-xs bg-gray-100 p-2 rounded overflow-x-auto"></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 数据管理界面 -->
+        <div id="data-section" class="section hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                <!-- 天体对象 -->
+                <div class="bg-white rounded-lg shadow-lg p-6 card-hover">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                        <i class="fas fa-star text-yellow-500 mr-2"></i>
+                        天体对象
+                    </h3>
+                    <div id="objectsCount" class="text-3xl font-bold text-blue-600 mb-2">-</div>
+                    <p class="text-gray-600 text-sm">已记录的天体对象</p>
+                    <button onclick="loadCelestialObjects()" class="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200">
+                        查看详情
+                    </button>
+                </div>
+                
+                <!-- 分类结果 -->
+                <div class="bg-white rounded-lg shadow-lg p-6 card-hover">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                        <i class="fas fa-tags text-green-500 mr-2"></i>
+                        分类结果
+                    </h3>
+                    <div id="classificationsCount" class="text-3xl font-bold text-green-600 mb-2">-</div>
+                    <p class="text-gray-600 text-sm">完成的分类任务</p>
+                    <button onclick="loadClassifications()" class="mt-4 w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition duration-200">
+                        查看详情
+                    </button>
+                </div>
+                
+                <!-- 执行历史 -->
+                <div class="bg-white rounded-lg shadow-lg p-6 card-hover">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                        <i class="fas fa-history text-purple-500 mr-2"></i>
+                        执行历史
+                    </h3>
+                    <div id="historyCount" class="text-3xl font-bold text-purple-600 mb-2">-</div>
+                    <p class="text-gray-600 text-sm">代码执行记录</p>
+                    <button onclick="loadExecutionHistory()" class="mt-4 w-full bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700 transition duration-200">
+                        查看详情
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 数据表格 -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">数据详情</h3>
+                <div id="dataTable" class="overflow-x-auto">
+                    <p class="text-gray-500 text-center py-8">请选择上方的数据类型查看详情</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 统计界面 -->
+        <div id="statistics-section" class="section hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- 分析类型分布 -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                        <i class="fas fa-pie-chart text-blue-500 mr-2"></i>
+                        分析类型分布
+                    </h3>
+                    <canvas id="analysisTypeChart" width="400" height="300"></canvas>
+                </div>
+                
+                <!-- 用户类型分布 -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                        <i class="fas fa-users text-green-500 mr-2"></i>
+                        用户类型分布
+                    </h3>
+                    <canvas id="userTypeChart" width="400" height="300"></canvas>
+                </div>
+                
+                <!-- 执行成功率 -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                        <i class="fas fa-chart-line text-purple-500 mr-2"></i>
+                        执行成功率趋势
+                    </h3>
+                    <canvas id="successRateChart" width="400" height="300"></canvas>
+                </div>
+                
+                <!-- 系统性能 -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">
+                        <i class="fas fa-tachometer-alt text-red-500 mr-2"></i>
+                        系统性能指标
+                    </h3>
+                    <div id="performanceMetrics" class="space-y-3">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">平均响应时间:</span>
+                            <span id="avgResponseTime" class="font-semibold">-</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">系统运行时间:</span>
+                            <span id="systemUptime" class="font-semibold">-</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">数据库状态:</span>
+                            <span id="dbStatus" class="font-semibold">-</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">分析图状态:</span>
+                            <span id="graphStatus" class="font-semibold">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 通知组件 -->
+    <div id="notification" class="fixed top-4 right-4 max-w-sm w-full bg-white rounded-lg shadow-lg border-l-4 border-blue-500 p-4 transform translate-x-full transition-transform duration-300 ease-in-out">
+        <div class="flex">
+            <div class="flex-shrink-0">
+                <i id="notificationIcon" class="fas fa-info-circle text-blue-500"></i>
+            </div>
+            <div class="ml-3">
+                <p id="notificationTitle" class="text-sm font-medium text-gray-900">通知</p>
+                <p id="notificationMessage" class="text-sm text-gray-500 mt-1"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

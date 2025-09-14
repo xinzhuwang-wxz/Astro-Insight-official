@@ -1,0 +1,79 @@
+data_preprocessing:
+  augmentation:
+    random_brightness_delta: 0.1
+    random_contrast_lower: 0.9
+    random_contrast_upper: 1.1
+    random_flip_left_right: true
+    random_flip_up_down: true
+  batch_size: 16
+  image_dir: sample_data/images
+  image_size:
+  - 128
+  - 128
+  random_state: 42
+  split_ratios:
+    test: 0.1
+    train: 0.8
+    validation: 0.1
+model_training:
+  checkpoint:
+    filepath: best_model.keras
+    mode: max
+    monitor: val_accuracy
+  compiler:
+    loss: sparse_categorical_crossentropy
+    metrics:
+    - accuracy
+    optimizer: adam
+  epochs: 2
+  model:
+    input_shape:
+    - 128
+    - 128
+    - 3
+    layers:
+    - activation: relu
+      filters: 32
+      kernel_size:
+      - 3
+      - 3
+      type: Conv2D
+    - pool_size:
+      - 2
+      - 2
+      type: MaxPooling2D
+    - activation: relu
+      filters: 64
+      kernel_size:
+      - 3
+      - 3
+      type: Conv2D
+    - pool_size:
+      - 2
+      - 2
+      type: MaxPooling2D
+    - activation: relu
+      filters: 128
+      kernel_size:
+      - 3
+      - 3
+      type: Conv2D
+    - pool_size:
+      - 2
+      - 2
+      type: MaxPooling2D
+    - type: Flatten
+    - activation: relu
+      type: Dense
+      units: 128
+    - activation: softmax
+      type: Dense
+result_analysis:
+  confusion_matrix:
+    cmap: Blues
+    enabled: true
+    figsize:
+    - 5
+    - 4
+  model_path: best_model.keras
+  plot_history: true
