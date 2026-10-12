@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Astro Insight · 古代可视化</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom"></script>
+  <script src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="bg-orb orb-a"></div>
+  <div class="bg-orb orb-b"></div>
+
+  <div class="app-container">
+    <!-- 左侧控制与仪表盘面板 -->
+    <aside class="dashboard-sidebar">
+      <header class="sidebar-header">
+        <p class="eyebrow">Astro Insight · 任务一</p>
+        <h1>古代天文星图</h1>
+        <p class="subtext">
+          复用古星表与星官连线数据，基于北天极点（Dec = 90°）进行极射赤面投影。
+        </p>
+        <div class="header-actions">
+          <button id="reloadBtn" class="btn btn-secondary">重载</button>
+          <button id="themeBtn" class="btn btn-secondary">主题</button>
+          <button id="detailBtn" class="btn btn-primary">详情</button>
+        </div>
+      </header>
+
+      <!-- 统计指标 -->
+      <section class="sidebar-section" id="summaryCards"></section>
+
+      <!-- 交互控制 -->
+      <section class="sidebar-section controls-card">
+        <div class="control-group">
+          <label>
+            <span>星等阈值 <span id="magThresholdLabel" class="control-value">≤ 10.0</span></span>
+            <input id="magThreshold" type="range" min="0" max="12" step="0.1" value="10" />
+          </label>
+        </div>
+        <div class="control-group">
+          <label>
+            <span>数据图层</span>
+            <select id="layerSelect">
+              <option value="combined">全天星图 + 星官连线</option>
+              <option value="ancient">仅全天星图</option>
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <section class="sidebar-section chart-section">
+        <div class="section-head">
+          <h3>亮度分层统计</h3>
+        </div>
+        <div class="chart-box chart-box-sidebar">
+          <canvas id="brightnessChart"></canvas>
+        </div>
+      </section>
+
+      <section class="sidebar-section info-section">
+        <div class="mini-table" id="starInfo">点击右侧星点可查看详细天体坐标与古籍标注。</div>
+      </section>
+    </aside>
+
+    <!-- 右侧核心可视化区域 -->
+    <main class="main-visualization">
+      <!-- 任务一：圆形北天极投影星图 -->
+      <article class="star-map-panel">
+        <div class="map-header">
+          <div>
+            <span class="badge" id="mapBadge">正在准备</span>
+            <h2>圆形北天极投影星图</h2>
+          </div>
+          <div class="map-hint">滚轮缩放 / 鼠标拖拽平移 / 双击重置视图</div>
+        </div>
+        <div class="star-map-wrapper">
+          <canvas id="starMap"></canvas>
+        </div>
+      </article>
+
+      <!-- 任务二：高维数据降维探索台 -->
+      <section id="stage2Panel" class="stage2-panel hidden">
+        <div class="stage2-header">
+          <div>
+            <p class="eyebrow">第二站 · 局部分析</p>
+            <h2>高维数据降维可视化</h2>
+            <p class="subtext">围绕 Gaia DR3 的高维特征构建探索台，支持 PCA / t-SNE / UMAP 的快速切换、聚类高亮与原始参数回看。</p>
+          </div>
+          <div class="stage2-actions">
+            <button id="openStellarBtn" class="btn btn-primary">进入恒星分析</button>
+            <button id="stage2BackBtn" class="btn btn-secondary">返回古代可视化</button>
+          </div>
+        </div>
+
+        <div class="stage2-grid">
+          <aside class="stage2-sidebar">
+            <section class="sidebar-section">
+              <div class="section-head"><h3>概览</h3></div>
+              <div id="stage2Stats" class="summary-list"></div>
+            </section>
+
+            <section class="sidebar-section controls-card">
+              <div class="control-group">
+                <label>
+                  <span>降维算法</span>
+                  <select id="dimAlgorithm">
+                    <option value="pca">PCA</option>
+                    <option value="tsne">t-SNE</option>
+                    <option value="umap">UMAP</option>
+                  </select>
+                </label>
+              </div>
+              <div class="control-group">
+                <label>
+                  <span>颜色编码</span>
+                  <select id="colorField">
+                    <option value="teff">有效温度</option>
+                    <option value="mag">星等</option>
+                    <option value="parallax">视差</option>
+                    <option value="abs_mag">绝对星等</option>
+                    <option value="pm_total">自行总速度</option>
+                  </select>
+                </label>
+              </div>
+              <div class="control-group">
+                <label>
+                  <span>点大小</span>
+                  <select id="sizeField">
+                    <option value="mag">星等</option>
+                    <option value="parallax">视差</option>
+                    <option value="ruwe">RUWE</option>
+                    <option value="parallax_error">视差误差</option>
+                    <option value="pm_total">自行总速度</option>
+                  </select>
+                </label>
+              </div>
+              <div class="control-group">
+                <label>
+                  <span>聚类半径 <span id="clusterEpsLabel" class="control-value">0.38</span></span>
+                  <input id="clusterEps" type="range" min="0.1" max="1.2" step="0.02" value="0.38" />
+                </label>
+              </div>
+              <div class="control-group">
+                <label>
+                  <span>最小簇样本 <span id="clusterMinLabel" class="control-value">8</span></span>
+                  <input id="clusterMinPts" type="range" min="3" max="24" step="1" value="8" />
+                </label>
+              </div>
+              <div class="toggle-row">
+                <label><input id="showClusters" type="checkbox" checked /> 显示聚类</label>
+                <label><input id="showOutliers" type="checkbox" checked /> 显示异常点</label>
+              </div>
+              <button id="recomputeDimBtn" class="btn btn-primary btn-block">重新计算</button>
+            </section>
+
+            <section class="sidebar-section chart-section">
+              <div class="section-head"><h3>PCA 方差贡献</h3></div>
+              <div class="chart-box chart-box-sidebar"><canvas id="varianceChart"></canvas></div>
+            </section>
+          </aside>
+
+          <section class="stage2-main">
+            <div class="stage2-toolbar">
+              <div id="algoNote" class="tool-tip"></div>
+              <div id="selectionBadge" class="badge badge-soft">尚未刷选</div>
+            </div>
+            <div class="chart-box chart-box-large"><canvas id="dimCanvas"></canvas></div>
+            <div class="chart-box chart-box-medium"><canvas id="clusterChart"></canvas></div>
+          </section>
+
+          <aside class="stage2-details">
+            <section class="sidebar-section">
+              <div class="section-head"><h3>选中样本</h3></div>
+              <div id="pointDetails" class="detail-card">点击散点查看单条样本的原始高维参数。</div>
+            </section>
+            <section class="sidebar-section">
+              <div class="section-head"><h3>区域统计</h3></div>
+              <div id="regionStats" class="detail-card">刷选区域后，将展示平均值、分布和异常信息。</div>
+            </section>
+          </aside>
+        </div>
+      </section>
+
+      <section id="stage3Panel" class="stage3-panel hidden">
+        <div class="stage3-header">
+          <div>
+            <p class="eyebrow">第三站 · 恒星物理</p>
+            <h2>CMD / HR / 自行与径向速度</h2>
+            <p class="subtext">基于 Gaia 与 HSC 特征，重现颜色-星等图、赫罗图与运动学矢量场，支持真实数据清洗、异常识别和轨迹回放。</p>
+          </div>
+          <div class="stage3-actions">
+            <button id="stage3BackBtn" class="btn btn-secondary">返回降维可视化</button>
+          </div>
+        </div>
+
+        <div class="stage3-layout">
+          <aside class="stage3-sidebar">
+            <section class="sidebar-section">
+              <div class="section-head"><h3>恒星分析概览</h3></div>
+              <div id="stellarStats" class="summary-list"></div>
+            </section>
+
+            <section class="sidebar-section controls-card">
+              <div class="control-group">
+                <label>
+                  <span>图表类型</span>
+                  <select id="stellarViewMode">
+                    <option value="cmd">CMD</option>
+                    <option value="hr">HR</option>
+                    <option value="cmd3d">3D CMD</option>
+                    <option value="motion">自行与径向速度</option>
+                  </select>
+                </label>
+              </div>
+              <div class="control-group">
+                <label>
+                  <span>颜色字段</span>
+                  <select id="stellarColorField">
+                    <option value="teff">有效温度</option>
+                    <option value="mh">金属丰度</option>
+                    <option value="rv">径向速度</option>
+                    <option value="parallax">视差</option>
+                    <option value="pm_total">自行总速度</option>
+                    <option value="quality">质量标记</option>
+                  </select>
+                </label>
+              </div>
+              <div class="control-group">
+                <label>
+                  <span>点大小</span>
+                  <select id="stellarSizeField">
+                    <option value="parallax_error">视差误差</option>
+                    <option value="pm_total">自行总速度</option>
+                    <option value="ruwe">RUWE</option>
+                    <option value="mag">星等</option>
+                  </select>
+                </label>
+              </div>
+              <div class="control-group">
+                <label>
+                  <span>视差误差阈值 <span id="stellarParallaxErrLabel" class="control-value">2.0σ</span></span>
+                  <input id="stellarParallaxErrThreshold" type="range" min="1" max="5" step="0.1" value="2" />
+                </label>
+              </div>
+              <div class="control-group">
+                <label>
+                  <span>时间回放（年） <span id="stellarEpochLabel" class="control-value">0</span></span>
+                  <input id="stellarEpochSlider" type="range" min="-1000" max="1000" step="50" value="0" />
+                </label>
+              </div>
+              <div class="toggle-row">
+                <label><input id="stellarShowOutliers" type="checkbox" checked /> 显示异常点</label>
+                <label><input id="stellarShowTheory" type="checkbox" checked /> 叠加理论轨迹</label>
+              </div>
+              <button id="stellarRecomputeBtn" class="btn btn-primary btn-block">重新计算恒星分析</button>
+            </section>
+
+            <section class="sidebar-section chart-section">
+              <div class="section-head"><h3>关键统计</h3></div>
+              <div id="stellarKeyStats" class="summary-list"></div>
+            </section>
+          </aside>
+
+          <section class="stage3-main">
+            <div class="stage3-toolbar">
+              <div id="stellarAlgoNote" class="tool-tip"></div>
+              <div id="stellarSelectionBadge" class="badge badge-soft">未选择对象</div>
+            </div>
+            <div id="stellarChartWrap" class="stellar-chart-wrap">
+              <canvas id="stellarCanvas"></canvas>
+            </div>
+            <div class="chart-box chart-box-medium"><canvas id="stellarAuxChart"></canvas></div>
+          </section>
+
+          <aside class="stage3-details">
+            <section class="sidebar-section">
+              <div class="section-head"><h3>样本详情</h3></div>
+              <div id="stellarPointDetails" class="detail-card">点击任一点查看 Gaia/HSC 参数、CMD/HR 位置与运动学信息。</div>
+            </section>
+            <section class="sidebar-section">
+              <div class="section-head"><h3>运动统计</h3></div>
+              <div id="stellarMotionStats" class="detail-card">运动学统计会随图表类型切换更新。</div>
+            </section>
+          </aside>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>

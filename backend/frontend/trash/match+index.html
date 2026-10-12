@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Astro Insight · 古代可视化</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="bg-orb orb-a"></div>
+  <div class="bg-orb orb-b"></div>
+
+  <header class="shell header-card">
+    <div>
+      <p class="eyebrow">Astro Insight · 任务一</p>
+      <h1>一、古代可视化</h1>
+      <p class="subtext">
+        复用项目中已有的古天文星表、金牛座天区和星官数据，构建“星图连线 · 亮度分层”双面板，并保留可定制连线样式参数。
+      </p>
+    </div>
+    <div class="header-actions">
+      <button id="reloadBtn" class="btn btn-secondary">重新加载数据</button>
+      <button id="themeBtn" class="btn btn-primary">切换主题</button>
+    </div>
+  </header>
+
+  <main class="shell layout">
+    <section class="hero-card">
+      <div class="hero-copy">
+        <span class="tag">古代可视化 / SN 1054 / 星官连线</span>
+        <h2>把古代观测、现代匹配与时间变化放在同一个交互界面里。</h2>
+        <p>
+          左侧看天空坐标与星官连线，中间看亮度分层，右侧看 SN 1054 的观测时间线。
+          点击任意天体即可查看古文献标注、HIP 编号和现代参数。
+        </p>
+        <div class="chip-row">
+          <span class="chip">古星表 J2000 → 1054 年坐标变换</span>
+          <span class="chip">星等阈值交互筛选</span>
+          <span class="chip">SN 1054 匹配高亮</span>
+        </div>
+      </div>
+      <div class="hero-stats" id="summaryCards"></div>
+    </section>
+
+    <section class="controls-card">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">交互控制</p>
+          <h3>古代可视化参数</h3>
+        </div>
+      </div>
+      <div class="controls-grid">
+        <label>
+          星等阈值
+          <input id="magThreshold" type="range" min="0" max="12" step="0.1" value="10" />
+          <span id="magThresholdLabel" class="control-value">≤ 10.0</span>
+        </label>
+        <label>
+          数据层
+          <select id="layerSelect">
+            <option value="combined">全天星图 + 星官连线 + 目标点</option>
+            <option value="ancient">仅全天星图</option>
+            <option value="modern">仅星官连线 / 目标点</option>
+          </select>
+        </label>
+      </div>
+    </section>
+
+    <section class="viz-grid">
+      <article class="panel panel-large">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">1. 全天星图</p>
+            <h3>中国古天文星官连线 + 古星表</h3>
+          </div>
+          <span class="badge" id="mapBadge">正在准备</span>
+        </div>
+        <div class="chart-box chart-box-large">
+          <canvas id="starMap"></canvas>
+        </div>
+        <div class="mini-table" id="starInfo">点击任意星点查看详情。</div>
+      </article>
+
+      <article class="panel panel-medium">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">2. 亮度分层</p>
+            <h3>古 / 现代星等对比</h3>
+          </div>
+        </div>
+        <div class="chart-box chart-box-medium">
+          <canvas id="brightnessChart"></canvas>
+        </div>
+        <div class="legend-grid" id="brightnessLegend"></div>
+      </article>
+
+      <article class="panel panel-medium">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">3. 匹配结果</p>
+            <h3>SN 1054 / 金牛座天区匹配</h3>
+          </div>
+        </div>
+        <div class="mini-table" id="matchInfo">加载完成后显示 0.1° 容差匹配结果。</div>
+      </article>
+    </section>
+
+    <section class="panel panel-full">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">参考数据</p>
+          <h3>复用数据来源与匹配结果</h3>
+        </div>
+        <span class="badge ghost">来自 `caafrc` / `CHN_constel` / `Tautou`</span>
+      </div>
+      <div class="data-grid" id="datasetCards"></div>
+    </section>
+  </main>
+
+  <template id="detailTemplate">
+    <div class="detail-card">
+      <div class="detail-title"></div>
+      <div class="detail-body"></div>
+    </div>
+  </template>
+
+  <script src="./app.js"></script>
+</body>
+</html>

@@ -1,0 +1,464 @@
+:root {
+    --bg: #030712;
+    --panel: rgba(15, 23, 42, 0.55);
+    --panel-strong: rgba(17, 24, 39, 0.85);
+    --text: #f3f4f6;
+    --muted: #9ca3af;
+    --line: rgba(255, 255, 255, 0.08);
+    --accent: #6366f1;
+    --accent-2: #a855f7;
+    --good: #10b981;
+    --warn: #f59e0b;
+    --shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+  }
+  
+  [data-theme="light"] {
+    --bg: #f8fafc;
+    --panel: rgba(255, 255, 255, 0.7);
+    --panel-strong: rgba(241, 245, 249, 0.9);
+    --text: #0f172a;
+    --muted: #64748b;
+    --line: rgba(15, 23, 42, 0.08);
+    --accent: #4f46e5;
+    --accent-2: #8b5cf6;
+    --good: #0d9488;
+    --warn: #d97706;
+    --shadow: 0 15px 30px rgba(15, 23, 42, 0.05);
+  }
+  
+  * { box-sizing: border-box; margin: 0; padding: 0; transition: background-color 0.2s, border-color 0.2s; }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow: hidden;
+  }
+  
+  /* 主容器布局 */
+  .app-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+  }
+  
+  /* 左侧边栏 */
+  .dashboard-sidebar {
+    width: 420px;
+    min-width: 380px;
+    border-right: 1px solid var(--line);
+    background: var(--panel);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding: 24px;
+    gap: 20px;
+    box-shadow: 5px 0 25px rgba(0,0,0,0.15);
+    z-index: 10;
+  }
+  
+  .sidebar-header h1 {
+    font-size: 24px;
+    font-weight: 800;
+    margin-top: 4px;
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+  
+  .eyebrow {
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  
+  .subtext {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  
+  .header-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+  }
+  
+  .btn {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.04);
+  }
+  .btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    border-color: transparent;
+  }
+
+  .btn-block {
+    width: 100%;
+  }
+
+  .control-value {
+    color: var(--text);
+    font-weight: 700;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  .summary-list,
+  .detail-card {
+    display: grid;
+    gap: 10px;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .summary-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: rgba(255,255,255,0.03);
+  }
+
+  .summary-item strong {
+    color: var(--text);
+  }
+
+  .badge-soft {
+    background: rgba(99, 102, 241, 0.12);
+    color: var(--text);
+  }
+
+  .tool-tip {
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  .toggle-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 12px;
+    color: var(--text);
+    font-size: 12px;
+  }
+
+  .toggle-row label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .stage2-panel {
+    margin-top: 18px;
+    flex: 1;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(15px);
+    overflow: hidden;
+    display: none;
+  }
+
+  .stage2-panel.hidden {
+    display: none !important;
+  }
+
+  .stage2-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+
+  .stage2-header h2 {
+    font-size: 22px;
+    margin: 4px 0 6px;
+  }
+
+  .stage2-grid {
+    display: grid;
+    grid-template-columns: 300px minmax(0, 1fr) 320px;
+    gap: 16px;
+    height: calc(100% - 76px);
+  }
+
+  .stage2-sidebar,
+  .stage2-details,
+  .stage2-main {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-height: 0;
+  }
+
+  .stage2-main .chart-box-large {
+    height: 420px;
+  }
+
+  .stage2-main .chart-box-medium {
+    height: 220px;
+  }
+
+  .stage2-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  @media (max-width: 1280px) {
+    .stage2-grid {
+      grid-template-columns: 1fr;
+      height: auto;
+    }
+    .dashboard-sidebar {
+      width: 360px;
+      min-width: 320px;
+    }
+  }
+  
+  /* 侧边栏卡片部分 */
+  .sidebar-section {
+    background: var(--panel-strong);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 16px;
+  }
+
+  .controls-grid,
+  .data-grid,
+  .legend-grid {
+    display: grid;
+    gap: 12px;
+  }
+
+  .data-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+
+  .dataset-card {
+    background: var(--panel-strong);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+  
+  #summaryCards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    background: transparent;
+    border: none;
+    padding: 0;
+  }
+  
+  .stat-card {
+    background: var(--panel-strong);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 12px 16px;
+  }
+  .stat-value { font-size: 20px; font-weight: 800; }
+  .stat-label { color: var(--muted); font-size: 11px; text-transform: uppercase; }
+  
+  .control-group {
+    margin-bottom: 12px;
+  }
+  .control-group:last-child { margin-bottom: 0; }
+  .control-group label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  
+  .chart-box-sidebar {
+    height: 180px;
+    margin-top: 8px;
+  }
+
+  .chart-box-large {
+    height: 560px;
+  }
+
+  .chart-box-medium {
+    height: 320px;
+  }
+  
+  .mini-table {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  
+  /* 右侧核心可视化区域 */
+  .main-visualization {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    background: radial-gradient(circle at center, rgba(99, 102, 241, 0.05) 0%, transparent 70%);
+    position: relative;
+  }
+
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .chart-box {
+    position: relative;
+    width: 100%;
+  }
+  
+  .star-map-panel {
+    flex: 1;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(15px);
+  }
+  
+  .map-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+  .map-header h2 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-top: 4px;
+  }
+  .map-hint {
+    font-size: 12px;
+    color: var(--muted);
+  }
+  
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    background: rgba(99, 102, 241, 0.1);
+    padding: 4px 8px;
+    border-radius: 6px;
+  }
+  
+  .star-map-wrapper {
+    flex: 1;
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+  
+  canvas {
+    width: 100% !important;
+    height: 100% !important;
+    cursor: grab;
+  }
+  canvas:active { cursor: grabbing; }
+  
+  /* 装饰背景星云 */
+  .bg-orb {
+    position: fixed; width: 600px; height: 600px; filter: blur(140px); opacity: 0.12; pointer-events: none; z-index: 1;
+  }
+  .orb-a { left: 20%; top: -10%; background: var(--accent); }
+  .orb-b { right: 10%; bottom: -10%; background: var(--accent-2); }
+
+  /* 阶段三：恒星物理分析面板样式 */
+.stage3-panel {
+  margin-top: 18px;
+  flex: 1;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(15px);
+  display: none;
+  flex-direction: column;
+}
+
+.stage3-panel.hidden {
+  display: none !important;
+}
+
+.stage3-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.stage3-layout {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr) 320px;
+  gap: 16px;
+  height: calc(100% - 76px);
+}
+
+/* 锁定第三阶段侧边栏和详情栏的高度，在超长时在栏目内部滚动 */
+.stage3-sidebar, .stage3-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5vh;
+  height: 100% !important; /* 强制填满外层 stage3-layout 容器 */
+  overflow-y: auto;        /* 超出高度时，启用纵向局部滚动条 */
+  min-height: 0;           /* 核心：防止被 Flex 强行向下撑开 */
+  
+  /* 美化局部滚动条（隐藏现代浏览器中粗糙的默认滚动条） */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+.stage3-sidebar::-webkit-scrollbar, .stage3-details::-webkit-scrollbar {
+  width: 4px;
+}
+.stage3-sidebar::-webkit-scrollbar-thumb, .stage3-details::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.stellar-chart-wrap {
+  position: relative !important; /* 核心：Chart.js 相应式必须要求父容器为 relative/absolute 定位 */
+  width: 100%;
+  height: 42vh !important;       /* 锁定高度为屏幕高度的 42% */
+  min-height: 0;
+  overflow: hidden !important;   /* 彻底拦截子元素无限向外撑开的可能 */
+}
+
+.stage3-actions {
+  display: flex;
+  gap: 8px;
+}

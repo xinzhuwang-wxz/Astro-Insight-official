@@ -1,0 +1,398 @@
+# 项目梳理与升级改造文档
+
+## 1. 项目概览
+
+这个仓库是一个以 **Next.js + CopilotKit + Tauri** 为核心的天文主题交互应用，包含：
+
+- 日历事件展示与月份切换
+- 相册式图像浏览与标签展示
+- 基于 CopilotKit 的自然语言交互与动作触发
+- 模拟实验与分析报告页面
+- 桌面端 Tauri 壳（当前部分功能已退化或占位）
+
+从产品形态看，它更像一个“**日历驱动的内容导航站**”，而不是纯 CRUD 系统。它的很多交互结构对数据探索、图像分析、实验任务看板都很有借鉴价值。
+
+---
+
+## 2. 技术栈
+
+### 前端
+
+- **Next.js 15**：使用 App Router
+- **React 19**：组件化 UI
+- **TypeScript**：静态类型约束
+- **Tailwind CSS 4**：样式与布局
+- **lucide-react**：图标
+
+### AI / 对话能力
+
+- **CopilotKit**
+  - `@copilotkit/react-core`
+  - `@copilotkit/react-ui`
+  - `@copilotkit/react-textarea`
+  - `@copilotkit/runtime`
+  - `@copilotkit/runtime-client-gql`
+- **OpenAI SDK**：作为后端 AI 运行时的一部分
+
+### 桌面端
+
+- **Tauri 2**：封装桌面应用
+
+### 开发工具
+
+- **Biome**：格式化与静态检查
+- **ESLint**：额外的 lint 规则
+- **Vitest**：测试
+
+---
+
+## 3. 目录结构与职责
+
+### 3.1 前端主目录
+
+- `src/app`：路由、页面、API
+- `src/components`：业务组件与通用 UI
+- `src/lib`：数据与工具函数
+- `src/hooks`：自定义 Hook
+- `src/styles`：全局样式
+- `public/images`：相册资源与标签数据
+
+### 3.2 Tauri 目录
+
+- `src-tauri/src/lib.rs`：桌面应用入口
+- `src-tauri/src/serial/*`：串口相关模块（当前已弱化/占位）
+- `src-tauri/tauri.conf.json`：Tauri 配置
+- `src-tauri/capabilities/default.json`：能力配置
+
+---
+
+## 4. 页面与路由
+
+| 路由 | 类型 | 作用 | 说明 |
+|---|---|---|---|
+| `/` | 页面 | 启动页 | 作为品牌/入口页 |
+| `/home` | 页面 | 日历主页 | 注册 Copilot Action，渲染日历 |
+| `/album/[folder]` | 动态页面 | 图像相册 | 读取 `public/images/{folder}` |
+| `/album/[folder]/manage` | 页面 | 图片管理占位 | 用于后续管理能力扩展 |
+| `/serial` | 页面 | 串口入口重定向 | 当前直接跳回 `/home` |
+| `/api/copilotkit` | API | CopilotKit runtime | AI 对话与 action 运行时 |
+| `/api/copilotkit/last-output` | API | 最近输出查询 | 返回最近一次 Copilot 输出 |
+| `/api/experiments` | API | 实验接口占位 | 当前为空 |
+
+---
+
+## 5. 核心功能梳理
+
+### 5.1 日历主页
+
+主要组件：`src/components/CalendarSeptember.tsx`
+
+功能包括：
+
+- 显示 9 月/10 月的月历视图
+- 切换月份
+- 按事件类别显示图标
+- 按 legend 筛选事件
+- 点击某些事件跳转到相册页面
+- 接收 Copilot 触发的美国天文事件数据
+
+### 5.2 相册浏览
+
+主要组件：`src/components/CalendarAlbum.tsx`
+
+功能包括：
+
+- 遍历 `public/images/{folder}` 下的图片
+- 从 `gz2_label_slice.csv` 中读取标签
+- 用卡片网格展示图片
+- 点击首图进入模拟实验页面
+- 支持查看最近的 Copilot 输出内容
+
+### 5.3 模拟实验与分析报告
+
+主要组件：
+
+- `src/components/SimulationExperiment.tsx`
+- `src/components/AnalysisReport.tsx`
+
+功能包括：
+
+- 展示多个实验卡片
+- 模拟训练进度与完成状态
+- 显示准确率等实验结果
+- 从实验页切换到分析报告页
+
+这部分很适合迁移成你的数据分析项目里的：
+
+- 任务执行看板
+- 分析流程面板
+- 模型/算法试验台
+
+### 5.4 CopilotKit 交互
+
+主要位置：`src/app/layout.tsx`、`src/app/home/page.tsx`、`src/app/api/copilotkit/route.ts`
+
+特点：
+
+- 全局接入 CopilotKit Popup
+- 支持 `useCopilotAction`
+- 通过 action 与前端状态联动
+- 可基于消息内容触发特定逻辑
+
+---
+
+## 6. 数据来源与数据流
+
+### 6.1 日历数据流
+
+1. `CalendarSeptember` 从 `src/lib/calendar-data.ts` 读取静态月历数据
+2. 页面根据当前月份构建事件映射
+3. 用户点击日期后，根据事件类别判断是否允许跳转
+4. 若是“星系分类”相关事件，则跳转到 `/album/HB?day=...&title=...`
+
+### 6.2 Copilot 数据流
+
+1. 用户与 Copilot 交互
+2. `layout.tsx` 中的 `onMessageSent` 处理消息
+3. 若消息包含特定关键词，则构造美国天文事件数据
+4. 数据写入 `localStorage`
+5. 触发自定义事件 `refreshUSAstronomyData`
+6. `CalendarSeptember` 监听该事件并更新界面
+
+### 6.3 相册数据流
+
+1. `app/album/[folder]/page.tsx` 在服务端读取 `public/images/{folder}`
+2. 自动扫描图片文件
+3. 读取 `gz2_label_slice.csv` 作为标签映射
+4. 组装图片数组与标签映射后传给 `CalendarAlbum`
+
+### 6.4 Copilot 输出存储流
+
+1. `/api/copilotkit` 请求进入运行时
+2. 运行时返回后执行 `onAfterRequest`
+3. 提取 `outputMessages`
+4. 写入内存变量和 `public/copilot-last-output.json`
+5. `/api/copilotkit/last-output` 用于读取最近输出
+
+---
+
+## 7. 接口说明
+
+### 7.1 `GET/POST /api/copilotkit`
+
+职责：
+
+- 作为 CopilotKit 的 runtime handler
+- 创建 `OpenAIAdapter`
+- 连接 `CopilotRuntime`
+- 配置远程 action 代理
+
+注意点：
+
+- 当前代码中存在 `remoteActions` 配置
+- `onAfterRequest` 用于记录输出
+- 适合做 AI 交互中枢
+
+### 7.2 `GET /api/copilotkit/last-output`
+
+职责：
+
+- 返回最近一次 Copilot 的输出消息
+- 当前更偏调试用途
+
+### 7.3 `GET /api/experiments`
+
+职责：
+
+- 当前为空
+- 预留未来实验任务接口
+
+建议后续补成：
+
+- 实验创建
+- 实验运行状态查询
+- 实验结果列表
+- 实验结果详情
+
+---
+
+## 8. 可复用组件清单
+
+| 组件 | 当前作用 | 迁移价值 |
+|---|---|---|
+| `CalendarSeptember` | 月历与事件导航 | 可改成时间轴、样本日程、版本排期 |
+| `CalendarAlbum` | 图片网格浏览 | 可改成样本集浏览器、图像审阅器 |
+| `SimulationExperiment` | 实验运行模拟 | 可改成分析任务面板、批处理任务页 |
+| `AnalysisReport` | 分析结果展示 | 可改成 EDA 报告页 |
+| `ThemeToggle` | 主题切换 | 可直接复用 |
+| `RoundedButton` / `button.tsx` | 按钮基础组件 | 可直接复用 |
+| `Starfield` | 星空背景装饰 | 可按需保留或删减 |
+| `useSerial` | 串口 Hook 占位 | 若不用可移除 |
+
+---
+
+## 9. 当前数据模型
+
+### 9.1 日历事件
+
+- `CalendarMonthData`
+  - `calendarData`
+  - `dayHeaders`
+  - `events`
+  - `legendItems`
+
+- `EventItem`
+  - `title`
+  - `time`
+  - `category`
+
+- `ApiEventItem`
+  - `month`
+  - `day`
+  - `title`
+  - `time`
+  - `category`
+
+### 9.2 相册
+
+- 图片来自 `public/images/{folder}`
+- 标签来自 `gz2_label_slice.csv`
+- `manifest.json` 可作为文件夹清单
+
+### 9.3 实验
+
+- `ExperimentConfig`
+  - `id`
+  - `epoch`
+  - `status`
+  - `accuracy`
+  - `startTime`
+  - `completionTime`
+
+### 9.4 Copilot 输出
+
+- 通过 `public/copilot-last-output.json` 暂存
+- 当前属于演示级落盘方式
+
+---
+
+## 10. 使用说明
+
+### 10.1 启动方式
+
+通常可使用：
+
+```bash
+pnpm install
+pnpm dev
+```
+
+如果需要构建：
+
+```bash
+pnpm build
+pnpm start
+```
+
+如果需要桌面端：
+
+```bash
+pnpm tauri dev
+```
+
+### 10.2 基本使用路径
+
+1. 打开 `/home`
+2. 查看月历事件
+3. 点击事件进入相册
+4. 在相册中查看图片与标签
+5. 点击首图进入模拟实验页
+6. 切换到分析报告页查看结果
+7. 使用 Copilot 进行交互触发
+
+---
+
+## 11. 对数据探索与可视化项目的改造建议
+
+如果你要把这套代码升级到自己的数据探索项目，建议优先抽取以下能力：
+
+### 11.1 保留的能力
+
+- 月历式导航结构
+- 网格化相册浏览
+- 任务/实验状态卡片
+- Copilot 驱动动作
+- 分析报告页面布局
+
+### 11.2 需要重构的部分
+
+- 把天文事件替换为你的数据域对象
+- 把 `public/images` 替换成真实数据集或对象存储
+- 把 `gz2_label_slice.csv` 替换成你的标签表、元数据表或数据库查询
+- 把 `SimulationExperiment` 改成真实分析任务流程
+- 把 `Copilot` action 改成“筛选数据 / 切换图表 / 生成摘要”的操作
+
+### 11.3 推荐的新抽象
+
+建议建立以下领域模型：
+
+- `Dataset`
+- `Sample`
+- `TimeWindow`
+- `ExplorationTask`
+- `InsightReport`
+- `ConversationAction`
+
+这样就能把当前项目的“日历 / 相册 / 实验”三段式结构，平滑迁移成“数据集 / 视图 / 结论”三段式结构。
+
+---
+
+## 12. 当前风险与注意事项
+
+| 风险点 | 问题 | 建议 |
+|---|---|---|
+| 密钥管理 | 前端/后端密钥边界需要确认 | 确保 OpenAI Key 只在服务端可用 |
+| 文件系统直读 | 直接读取 `public/images` | 后续改成正式 API 或数据服务 |
+| 静态数据过多 | 月历数据硬编码 | 改为配置化或数据库驱动 |
+| 占位接口 | `api/experiments` 为空 | 尽快补齐真实业务逻辑 |
+| 串口模块遗留 | `useSerial` 已退化 | 不需要就删除，需要则独立封装 |
+| 状态传播方式 | `localStorage + 自定义事件` 偏演示 | 建议升级为统一状态管理或 API |
+
+---
+
+## 13. 建议的升级顺序
+
+1. **先抽公共 UI**
+   - 按钮
+   - 卡片
+   - 网格布局
+   - 状态展示
+
+2. **再抽业务壳**
+   - 时间轴/日历
+   - 图像浏览器
+   - 分析报告页
+
+3. **再替换数据层**
+   - 文件系统数据 -> 数据库 / API
+   - 静态事件 -> 动态事件
+   - 模拟实验 -> 真正任务引擎
+
+4. **最后升级 Copilot 能力**
+   - 对话触发筛选
+   - 生成图表
+   - 解释分析结果
+   - 调用后端工具链
+
+---
+
+## 14. 结论
+
+这个项目最有价值的地方不是某一个天文主题页面，而是它已经形成了一套很适合“数据探索 + 交互分析”的结构：
+
+- **时间维度**：日历
+- **对象维度**：相册 / 图片 / 标签
+- **过程维度**：实验 / 运行状态 / 分析报告
+- **交互维度**：CopilotKit 驱动动作
+
+如果你的目标是升级一个数据探索与可视化项目，这个仓库可以作为一个非常好的“交互骨架”来复用。
