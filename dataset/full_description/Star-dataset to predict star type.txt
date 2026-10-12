@@ -1,0 +1,31 @@
+数据集：Star-dataset to predict star types  
+文件：6_class_csv.csv  
+数据集路径"/Users/physicsboy/Desktop/Hackathon/Astro_Insight/dataset/dataset/6_class_csv.csv"  
+
+- CSV 文件共含 240 条记录，7 个特征列 + 1 个目标列。  
+- 目标列 `Star type` 为整数（0–5），对应六类恒星：  
+  - 0 → Brown Dwarf（褐矮星）  
+  - 1 → Red Dwarf（红矮星）  
+  - 2 → White Dwarf（白矮星）  
+  - 3 → Main Sequence（主序星）  
+  - 4 → Supergiant（超巨星）  
+  - 5 → Hypergiant（亮超巨星）  
+
+列名如下：  
+Temperature (K),Luminosity(L/Lo),Radius(R/Ro),Absolute magnitude(Mv),Star type,Star color,Spectral Class
+
+相关列名介绍：
+- `Temperature (K)`：恒星表面温度（Kelvin）  
+- `Luminosity(L/Lo)`：相对光度（以太阳为基准）  
+- `Radius(R/Ro)`：相对半径（以太阳为基准）  
+- `Absolute magnitude(Mv)`：绝对星等  
+- `Star type`：恒星类型（目标列，0–5 的分类标签）  
+- `Star color`：颜色描述（如 white, red, blue, yellow 等）  
+- `Spectral Class`：光谱类型（如 O, B, A, F, G, K, M）  
+
+---
+
+任务：请直接输出一段完整、可运行的 Python 代码，实现用户{要求}满足以下要求：  
+
+1. 导入必要的库（pandas, numpy, matplotlib/seaborn, scikit-learn）。  
+2. 确保代码结构清晰，有注释，直接可运行。  

@@ -1,0 +1,25 @@
+数据集：SDSS Galaxy Classification DR18  
+文件：sdss_dr18.csv  
+- CSV 文件约含 100,000 条记录，具有大约 42 个特征列加 1 个目标列（class）。:contentReference[oaicite:0]{index=0}  
+- 目标列 `class` 包含三类：STAR、GALAXY、QSO。:contentReference[oaicite:1]{index=1}
+数据集路径"/Users/physicsboy/Desktop/Hackathon/Astro_Insight/dataset/dataset/sdss_100k_galaxy_form_burst.csv"
+记录数：约 100,000 行  
+列名如下：
+
+objid, specobjid, ra, dec,  
+u, g, r, i, z,  
+modelFlux_u, modelFlux_g, modelFlux_r, modelFlux_i, modelFlux_z,  
+petroRad_u, petroRad_g, petroRad_i, petroRad_r, petroRad_z,  
+petroFlux_u, petroFlux_g, petroFlux_i, petroFlux_r, petroFlux_z,  
+petroR50_u, petroR50_g, petroR50_i, petroR50_r, petroR50_z,  
+psfMag_u, psfMag_g, psfMag_r, psfMag_i, psfMag_z,  
+expAB_u, expAB_g, expAB_r, expAB_i, expAB_z,  
+class, subclass, redshift, redshift_err  
+
+目标列：  
+- `class` （STAR / GALAXY / QSO）  
+
+任务：请直接输出一段完整、可运行的 Python 代码，实现用户{要求}满足以下要求：  
+
+1. 导入必要的库（pandas, numpy, matplotlib/seaborn, scikit-learn）。  
+2. 确保代码结构清晰，有注释，直接可运行。  
