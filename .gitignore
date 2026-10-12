@@ -1,76 +1,28 @@
+# secrets and runtime state
+.env
+.env.*.local
+backend/runtime/llm_settings.json
+backend/runtime/*.tmp
+
 # Python
 __pycache__/
 *.py[cod]
-*$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
+.venv/
+.pytest_cache/
 
-# Virtual environments
-venv/
-env/
-ENV/
-env.bak/
-venv.bak/
+# JS / Next
+frontend/node_modules/
+frontend/.next/
+frontend/dist/
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
+# Tauri / Rust
+src-tauri/target/
 
-# OS
+# OS/editor
 .DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
 Thumbs.db
 
-# Logs
+# Jupyter checkpoints, logs, runtime conversation history
+.ipynb_checkpoints/
 *.log
-logs/
-
-# Database files
-*.db
-*.sqlite
-*.sqlite3
-
-# API service logs
-api_service.log
-
-# Output directories
-output/
-results/
-
-# Temporary files
-*.tmp
-*.temp
-
-# Environment variables
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-*.zip
-
-
+query_history.db

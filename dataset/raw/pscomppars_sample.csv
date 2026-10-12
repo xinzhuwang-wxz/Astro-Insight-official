@@ -1,6 +1,0 @@
-pl_name,hostname,discoverymethod,disc_year,pl_orbper,pl_rade,pl_bmasse,st_teff,st_rad,sy_dist
-Kepler-22 b,Kepler-22,Transit,2011,289.8623,2.38,36.0,5518,0.979,195.0
-HD 209458 b,HD 209458,Transit,1999,3.52474859,15.4,220.0,6117,1.203,47.1
-51 Peg b,51 Peg,Radial Velocity,1995,4.230785,13.8,150.0,5793,1.237,15.6
-TRAPPIST-1 e,TRAPPIST-1,Transit,2017,6.099615,0.92,0.772,2559,0.121,12.1
-Proxima Cen b,Proxima Centauri,Radial Velocity,2016,11.186,1.08,1.27,3042,0.1542,1.301

@@ -1,0 +1,104 @@
+{
+  "updatedAt": "2025-09-14T05:27:28.905Z",
+  "outputMessages": [
+    {
+      "id": "ck-d89b612f-a463-4136-baed-1a8029f26020",
+      "createdAt": "2025-09-14T05:27:25.077Z",
+      "type": "AgentStateMessage",
+      "threadId": "4b9c3175-7158-4003-ae13-d8f26cd0e6b5",
+      "agentName": "quickstart_agent",
+      "nodeName": "__end__",
+      "runId": "251daa69-ce5c-4340-8148-8b85911199c8",
+      "active": true,
+      "role": "assistant",
+      "state": "{\"copilotkit\":{\"actions\":[{\"name\":\"sayHello\",\"description\":\"Say hello to someone.\",\"parameters\":{\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\",\"description\":\"name of the person to say greet\"}},\"required\":[\"name\"]}}]},\"ask_human\":false}",
+      "running": true
+    },
+    {
+      "id": "ck-fb14daf6-23d3-4f86-b758-d25b1a63afad",
+      "createdAt": "2025-09-14T05:27:25.079Z",
+      "type": "AgentStateMessage",
+      "threadId": "4b9c3175-7158-4003-ae13-d8f26cd0e6b5",
+      "agentName": "quickstart_agent",
+      "nodeName": "__start__",
+      "runId": "68c0b275-9931-4447-9f9e-62672aac1973",
+      "active": true,
+      "role": "assistant",
+      "state": "{\"copilotkit\":{\"actions\":[{\"name\":\"sayHello\",\"description\":\"Say hello to someone.\",\"parameters\":{\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\",\"description\":\"name of the person to say greet\"}},\"required\":[\"name\"]}}]},\"ask_human\":false}",
+      "running": true
+    },
+    {
+      "id": "ck-05086a56-41d8-442c-bd5a-39d955279aeb",
+      "createdAt": "2025-09-14T05:27:25.081Z",
+      "type": "AgentStateMessage",
+      "threadId": "4b9c3175-7158-4003-ae13-d8f26cd0e6b5",
+      "agentName": "quickstart_agent",
+      "nodeName": "__start__",
+      "runId": "68c0b275-9931-4447-9f9e-62672aac1973",
+      "active": false,
+      "role": "assistant",
+      "state": "{\"copilotkit\":{\"actions\":[{\"name\":\"sayHello\",\"description\":\"Say hello to someone.\",\"parameters\":{\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\",\"description\":\"name of the person to say greet\"}},\"required\":[\"name\"]}}]},\"ask_human\":false}",
+      "running": true
+    },
+    {
+      "id": "ck-6bc2cd50-7c83-4440-bb9a-02a91a70fc86",
+      "createdAt": "2025-09-14T05:27:25.085Z",
+      "type": "AgentStateMessage",
+      "threadId": "4b9c3175-7158-4003-ae13-d8f26cd0e6b5",
+      "agentName": "quickstart_agent",
+      "nodeName": "chatbot",
+      "runId": "66a7cc6e-bcac-43bd-a623-1d957b5de1d2",
+      "active": true,
+      "role": "assistant",
+      "state": "{\"copilotkit\":{\"actions\":[{\"name\":\"sayHello\",\"description\":\"Say hello to someone.\",\"parameters\":{\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\",\"description\":\"name of the person to say greet\"}},\"required\":[\"name\"]}}]},\"ask_human\":false}",
+      "running": true
+    },
+    {
+      "id": "run--509eb577-b2e5-4160-9763-8e7900696f98",
+      "createdAt": "2025-09-14T05:27:28.877Z",
+      "type": "TextMessage",
+      "content": "好的，以下是我所知道的一些常见的天文事件类型：\n\n1. **日食和月食**：\n   - 日食：当月球运行到太阳和地球之间时，遮挡住太阳光，形成日食。日食分为日全食、日偏食和日环食。\n   - 月食：当地球运行到太阳和月球之间时，地球的影子遮挡住月球，形成月食。月食分为月全食和月偏食。\n\n2. **流星雨**：\n   - 流星雨是由于地球穿过彗星或小行星留下的尘埃颗粒轨道而产生的现象。著名的流星雨包括：\n     - 宝瓶座流星雨（每年5月）\n     - 双子座流星雨（每年12月）\n     - 猎户座流星雨（每年10月）\n\n3. **行星观测**：\n   - 金星和火星等行星在特定时间会变得非常明亮，易于观测。例如，金星常被称为“晨星”或“昏星”。\n\n4. **彗星**：\n   - 彗星是太阳系中的冰质天体，当它们靠近太阳时会形成明亮的彗尾。例如，海尔-波普彗星在1997年曾被广泛观测。\n\n5. **超级月亮**：\n   - 当月球处于近地点附近时，看起来会比平时更大更亮。这种现象被称为“超级月亮”。\n\n6. **天文季节性事件**：\n   - 例如，春分、秋分、夏至和冬至等，这些时刻太阳直射点的变化会影响地球上的昼夜长短。\n\n这些是一些常见的天文事件。如果你对某个具体的事件感兴趣，可以告诉我，我可以提供更详细的信息。",
+      "role": "assistant"
+    },
+    {
+      "id": "ck-9a690e71-f896-4d5e-ac3b-bcf777c4a69c",
+      "createdAt": "2025-09-14T05:27:28.896Z",
+      "type": "AgentStateMessage",
+      "threadId": "4b9c3175-7158-4003-ae13-d8f26cd0e6b5",
+      "agentName": "quickstart_agent",
+      "nodeName": "chatbot",
+      "runId": "66a7cc6e-bcac-43bd-a623-1d957b5de1d2",
+      "active": false,
+      "role": "assistant",
+      "state": "{\"copilotkit\":{\"actions\":[{\"name\":\"sayHello\",\"description\":\"Say hello to someone.\",\"parameters\":{\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\",\"description\":\"name of the person to say greet\"}},\"required\":[\"name\"]}}]},\"ask_human\":false}",
+      "running": true
+    },
+    {
+      "id": "ck-ff1c7fd7-13cc-465f-9d3c-ea1302c441f2",
+      "createdAt": "2025-09-14T05:27:28.898Z",
+      "type": "AgentStateMessage",
+      "threadId": "4b9c3175-7158-4003-ae13-d8f26cd0e6b5",
+      "agentName": "quickstart_agent",
+      "nodeName": "chatbot",
+      "runId": "251daa69-ce5c-4340-8148-8b85911199c8",
+      "active": true,
+      "role": "assistant",
+      "state": "{\"copilotkit\":{\"actions\":[{\"name\":\"sayHello\",\"description\":\"Say hello to someone.\",\"parameters\":{\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\",\"description\":\"name of the person to say greet\"}},\"required\":[\"name\"]}}]},\"ask_human\":false}",
+      "running": true
+    },
+    {
+      "id": "ck-f776e652-4d00-476d-a6b8-061efd73027a",
+      "createdAt": "2025-09-14T05:27:28.900Z",
+      "type": "AgentStateMessage",
+      "threadId": "4b9c3175-7158-4003-ae13-d8f26cd0e6b5",
+      "agentName": "quickstart_agent",
+      "nodeName": "__end__",
+      "runId": "251daa69-ce5c-4340-8148-8b85911199c8",
+      "active": false,
+      "role": "assistant",
+      "state": "{\"messages\":[{\"role\":\"user\",\"content\":\"美国天文事件\",\"id\":\"ck-5d8edf12-5de1-4084-a60f-8d29099ade61\"},{\"id\":\"019946b0c420438281a2ff73c45f875c\",\"name\":\"search_tool\",\"arguments\":{\"query\":\"美国最近的天文事件\"},\"parentMessageId\":\"run--f1792a45-ed75-4e08-87ec-7aa810bf4a4a\"},{\"actionExecutionId\":\"019946b0c420438281a2ff73c45f875c\",\"actionName\":\"search_tool\",\"result\":\"关于 '美国最近的天文事件' 的搜索结果：这是一个模拟的搜索结果。在实际应用中，这里会连接到真实的搜索API。\",\"id\":\"71c59bfe-bdad-4e14-8634-f8e9ff6b3fa1\"},{\"role\":\"assistant\",\"content\":\"目前我无法提供实时的天文事件信息。不过，你可以关注以下几种常见的天文事件：\\n\\n1. **日食和月食**：这些是常见的天文现象，通常会在特定时间发生。\\n2. **流星雨**：例如每年5月的宝瓶座流星雨或12月的双子座流星雨。\\n3. **行星观测**：如金星、火星等行星在夜空中可见时。\\n4. **彗星**：偶尔会有一颗彗星掠过地球附近，例如海尔-波普彗星等。\\n\\n如果你对某个具体事件感兴趣，可以提供更多信息，我可以为你提供更多背景知识和观测建议。你也可以查阅NASA或其他天文机构的网站获取最新信息。\",\"id\":\"run--9825f58b-3b74-40e6-b441-55c854fe1c07\",\"parentMessageId\":\"run--9825f58b-3b74-40e6-b441-55c854fe1c07\"},{\"role\":\"user\",\"content\":\"请告诉你所知道的就行\",\"id\":\"ck-d48b134f-1f62-4629-9802-bad71f5f6555\"},{\"role\":\"assistant\",\"content\":\"好的，以下是我所知道的一些常见的天文事件类型：\\n\\n1. **日食和月食**：\\n   - 日食：当月球运行到太阳和地球之间时，遮挡住太阳光，形成日食。日食分为日全食、日偏食和日环食。\\n   - 月食：当地球运行到太阳和月球之间时，地球的影子遮挡住月球，形成月食。月食分为月全食和月偏食。\\n\\n2. **流星雨**：\\n   - 流星雨是由于地球穿过彗星或小行星留下的尘埃颗粒轨道而产生的现象。著名的流星雨包括：\\n     - 宝瓶座流星雨（每年5月）\\n     - 双子座流星雨（每年12月）\\n     - 猎户座流星雨（每年10月）\\n\\n3. **行星观测**：\\n   - 金星和火星等行星在特定时间会变得非常明亮，易于观测。例如，金星常被称为“晨星”或“昏星”。\\n\\n4. **彗星**：\\n   - 彗星是太阳系中的冰质天体，当它们靠近太阳时会形成明亮的彗尾。例如，海尔-波普彗星在1997年曾被广泛观测。\\n\\n5. **超级月亮**：\\n   - 当月球处于近地点附近时，看起来会比平时更大更亮。这种现象被称为“超级月亮”。\\n\\n6. **天文季节性事件**：\\n   - 例如，春分、秋分、夏至和冬至等，这些时刻太阳直射点的变化会影响地球上的昼夜长短。\\n\\n这些是一些常见的天文事件。如果你对某个具体的事件感兴趣，可以告诉我，我可以提供更详细的信息。\",\"id\":\"run--509eb577-b2e5-4160-9763-8e7900696f98\",\"parentMessageId\":\"run--509eb577-b2e5-4160-9763-8e7900696f98\"}],\"copilotkit\":{\"actions\":[{\"name\":\"sayHello\",\"description\":\"Say hello to someone.\",\"parameters\":{\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\",\"description\":\"name of the person to say greet\"}},\"required\":[\"name\"]}}]},\"ask_human\":false}",
+      "running": true
+    }
+  ],
+  "threadId": "4b9c3175-7158-4003-ae13-d8f26cd0e6b5"
+}
